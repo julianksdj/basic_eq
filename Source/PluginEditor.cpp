@@ -32,7 +32,7 @@ Basic_eqAudioProcessorEditor::Basic_eqAudioProcessorEditor(Basic_eqAudioProcesso
         band_sld[i].setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
         band_sld[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, BAND_W, 30);
         band_sld[i].addListener(this);
-        band_sld[i].setRange(-48.0, 10.0);
+        band_sld[i].setRange(-90.0, 1.0);
         
         addAndMakeVisible(band_lbl[i]);
         juce::String lbl_str = "f" + juce::String(i + 1);
@@ -74,6 +74,7 @@ void Basic_eqAudioProcessorEditor::sliderValueChanged(juce::Slider *slider)
         if(slider == &band_sld[i])
         {
             DBG("band_sld[" << i << "]="<< band_sld[i].getValue());
+            audioProcessor.updateFilter(i, band_sld[i].getValue(), 1000.0f, 0.7f);
         }
     }
 }

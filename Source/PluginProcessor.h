@@ -9,6 +9,9 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Filter.h"
+
+#define NUMBER_OF_BANDS 8
 
 //==============================================================================
 /**
@@ -52,8 +55,13 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    void updateFilter(int band, float g, float f, float q);
 
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Basic_eqAudioProcessor)
+    
+    Filter parametricFilter[NUMBER_OF_BANDS];
+    
 };

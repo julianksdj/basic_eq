@@ -11,8 +11,6 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
-#define NUMBER_OF_BANDS 8
-
 //==============================================================================
 /**
 */
