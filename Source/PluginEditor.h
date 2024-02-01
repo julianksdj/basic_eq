@@ -35,6 +35,7 @@ private:
     
     // Controls
     juce::Slider band_sld[NUMBER_OF_BANDS];
+    juce::Slider band_knb[NUMBER_OF_BANDS];
     
     // Labels
     juce::Label band_lbl[NUMBER_OF_BANDS];
