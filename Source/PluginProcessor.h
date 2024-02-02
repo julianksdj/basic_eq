@@ -12,6 +12,16 @@
 #include "Filter.h"
 
 #define NUMBER_OF_BANDS 8
+#define CUTOFF_1 20.0
+#define CUTOFF_2 100.0
+#define CUTOFF_3 500.0
+#define CUTOFF_4 1000.0
+#define CUTOFF_5 2000.0
+#define CUTOFF_6 5000.0
+#define CUTOFF_7 10000.0
+#define CUTOFF_8 15000.0
+
+
 
 //==============================================================================
 /**
@@ -56,12 +66,14 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    void updateFilter(int band, float g, float f, float q);
+    void updateFilterGain(int band, float g);
+    void updateFilterCutoff(int band, float f);
+    void updateFilterQ(int band, float q);
+    void setFilterState(int band, bool b);
 
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Basic_eqAudioProcessor)
     
-    Filter parametricFilter[NUMBER_OF_BANDS];
-    
+    Filter parametricFilter[NUMBER_OF_BANDS];    
 };

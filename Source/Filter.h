@@ -24,6 +24,10 @@ class Filter {
     };
     
     struct filterParams_t {
+        bool state;
+        float g; // gain (dB)
+        float f;
+        float q;
         float fs; //sampling rate
         biquadCoeffs_t biquadCoeffs;
         float z1_i; // x(n-1)
@@ -34,8 +38,13 @@ class Filter {
     
 public:
     Filter();
-    Filter(float fs);
-    void computeBiquadCoeffs(float g, float f, float q);
+    Filter(float fs, float g, float f, float q);
+    void setGain(float g);
+    void setCutoff(float f);
+    void setQ(float q);
+    void setState(bool on);
+    bool getState();
+    void computeBiquadCoeffs();
     void runBiquadFilter(float* channelData, int size);
     
 private:

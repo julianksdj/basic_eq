@@ -93,9 +93,15 @@ void Basic_eqAudioProcessor::changeProgramName (int index, const juce::String& n
 //==============================================================================
 void Basic_eqAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    for (int i=0; i < NUMBER_OF_BANDS; i++) {
-        parametricFilter[i] = Filter(sampleRate);
-    }
+    parametricFilter[0] = Filter(sampleRate, 0.0f, CUTOFF_1, 0.1f);
+    parametricFilter[1] = Filter(sampleRate, 0.0f, CUTOFF_2, 0.1f);
+    parametricFilter[2] = Filter(sampleRate, 0.0f, CUTOFF_3, 0.1f);
+    parametricFilter[3] = Filter(sampleRate, 0.0f, CUTOFF_4, 0.1f);
+    parametricFilter[4] = Filter(sampleRate, 0.0f, CUTOFF_5, 0.1f);
+    parametricFilter[5] = Filter(sampleRate, 0.0f, CUTOFF_6, 0.1f);
+    parametricFilter[6] = Filter(sampleRate, 0.0f, CUTOFF_7, 0.1f);
+    parametricFilter[7] = Filter(sampleRate, 0.0f, CUTOFF_8, 0.1f);
+
 }
 
 void Basic_eqAudioProcessor::releaseResources()
@@ -130,8 +136,30 @@ bool Basic_eqAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
 }
 #endif
 
-void Basic_eqAudioProcessor::updateFilter(int band, float g, float f, float q) {
-    parametricFilter[band].computeBiquadCoeffs(g, f, q);
+void Basic_eqAudioProcessor::updateFilterGain(int band, float g) {
+    parametricFilter[band].setGain(g);
+}
+
+void Basic_eqAudioProcessor::updateFilterCutoff(int band, float f) {
+    parametricFilter[band].setCutoff(f);
+}
+
+void Basic_eqAudioProcessor::updateFilterQ(int band, float q) {
+    parametricFilter[band].setQ(q);
+}
+
+void Basic_eqAudioProcessor::setFilterState(int band, bool b) {
+    unsigned count = 0;
+    parametricFilter[band].setState(b);
+//    for (int i = 0; i < NUMBER_OF_BANDS; i++) {
+//        if (parametricFilter[i].getState()) {
+//            count++;
+//        }
+//    }
+//    for (int i = 0; i < NUMBER_OF_BANDS; i++) {
+//        parametricFilter[i].setCount(count);
+//    }
+
 }
 
 void Basic_eqAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -142,8 +170,10 @@ void Basic_eqAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
-    parametricFilter[0].runBiquadFilter(buffer.getWritePointer(0), buffer.getNumSamples());
+    
+    for (int i = 0; i < NUMBER_OF_BANDS; i++) {
+        parametricFilter[i].runBiquadFilter(buffer.getWritePointer(0), buffer.getNumSamples());
+    }
 
 }
 
