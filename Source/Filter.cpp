@@ -69,13 +69,15 @@ void Filter::runBiquadFilter(float* buffer, int size) {
     if (biquadFilterParams.state) {
         for (unsigned n = 0; n < size; n++) {
             // Peaking filter
-            biquadFilterParams.z2_i = biquadFilterParams.z1_i;
-            biquadFilterParams.z1_i = buffer[n];
-            buffer[n] = (biquadFilterParams.biquadCoeffs.b0 * buffer[n]
+            float currentIn = buffer[n];
+            float currentOut = (biquadFilterParams.biquadCoeffs.b0 * currentIn
                          + biquadFilterParams.biquadCoeffs.b1 * biquadFilterParams.z1_i
                          + biquadFilterParams.biquadCoeffs.b2 * biquadFilterParams.z2_i
                          - biquadFilterParams.biquadCoeffs.a1 * biquadFilterParams.z1_o
                          - biquadFilterParams.biquadCoeffs.a2 * biquadFilterParams.z2_o);
+            buffer[n] = currentOut;
+            biquadFilterParams.z2_i = biquadFilterParams.z1_i;
+            biquadFilterParams.z1_i = currentIn;
             biquadFilterParams.z2_o = biquadFilterParams.z1_o;
             biquadFilterParams.z1_o = buffer[n];
         }
