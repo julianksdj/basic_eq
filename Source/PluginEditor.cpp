@@ -37,20 +37,23 @@ Basic_eqAudioProcessorEditor::Basic_eqAudioProcessorEditor(Basic_eqAudioProcesso
         band_sld[i].setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
         band_sld[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, BAND_W, 30);
         band_sld[i].addListener(this);
-        band_sld[i].setRange(-90.0, 1.0);
+        band_sld[i].setRange(-12.0, 12.0);
+        band_sld[i].setValue(0.0); // TODO: default values in common header
         
         addAndMakeVisible(band_knb[i]);
         band_knb[i].setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
         band_knb[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, BAND_W, 30);
         band_knb[i].addListener(this);
         band_knb[i].setRange(0.1, 2.0);
+        band_knb[i].setValue(0.7);
+
         
         addAndMakeVisible(band_tgl[i]);
-        band_tgl[i].setToggleState(false, juce::dontSendNotification);
+        band_tgl[i].setToggleState(true, juce::dontSendNotification);
         band_tgl[i].addListener(this);
         
         addAndMakeVisible(band_lbl[i]);
-        juce::String lbl_str = "f" + juce::String(i + 1);
+        juce::String lbl_str = "f" + juce::String(i + 1); // TODO: print cutoff freqs
         band_lbl[i].setJustificationType(juce::Justification::centred);
         band_lbl[i].setText(lbl_str, juce::dontSendNotification);
     }

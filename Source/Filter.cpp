@@ -13,12 +13,12 @@
 Filter::Filter() {
 }
 
-Filter::Filter(float fs, float g, float f, float q) {
+Filter::Filter(float fs, float f) {
     biquadFilterParams.fs = fs;
-    biquadFilterParams.g = g;
+    biquadFilterParams.g = 1.0f; // TODO: default values in header file
     biquadFilterParams.f = f;
-    biquadFilterParams.q = q;
-    biquadFilterParams.state = false;
+    biquadFilterParams.q = 0.7f;
+    biquadFilterParams.state = true;
     biquadFilterParams.z1_i = 0.0f;
     biquadFilterParams.z2_i = 0.0f;
     biquadFilterParams.z1_o = 0.0f;

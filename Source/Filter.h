@@ -38,7 +38,7 @@ class Filter {
     
 public:
     Filter();
-    Filter(float fs, float g, float f, float q);
+    Filter(float fs, float f);
     void setGain(float g);
     void setCutoff(float f);
     void setQ(float q);

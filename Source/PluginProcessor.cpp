@@ -93,14 +93,14 @@ void Basic_eqAudioProcessor::changeProgramName (int index, const juce::String& n
 //==============================================================================
 void Basic_eqAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    parametricFilter[0] = Filter(sampleRate, 0.0f, CUTOFF_1, 0.1f);
-    parametricFilter[1] = Filter(sampleRate, 0.0f, CUTOFF_2, 0.1f);
-    parametricFilter[2] = Filter(sampleRate, 0.0f, CUTOFF_3, 0.1f);
-    parametricFilter[3] = Filter(sampleRate, 0.0f, CUTOFF_4, 0.1f);
-    parametricFilter[4] = Filter(sampleRate, 0.0f, CUTOFF_5, 0.1f);
-    parametricFilter[5] = Filter(sampleRate, 0.0f, CUTOFF_6, 0.1f);
-    parametricFilter[6] = Filter(sampleRate, 0.0f, CUTOFF_7, 0.1f);
-    parametricFilter[7] = Filter(sampleRate, 0.0f, CUTOFF_8, 0.1f);
+    parametricFilter[0] = Filter(sampleRate, CUTOFF_1);
+    parametricFilter[1] = Filter(sampleRate, CUTOFF_2);
+    parametricFilter[2] = Filter(sampleRate, CUTOFF_3);
+    parametricFilter[3] = Filter(sampleRate, CUTOFF_4);
+    parametricFilter[4] = Filter(sampleRate, CUTOFF_5);
+    parametricFilter[5] = Filter(sampleRate, CUTOFF_6);
+    parametricFilter[6] = Filter(sampleRate, CUTOFF_7);
+    parametricFilter[7] = Filter(sampleRate, CUTOFF_8);
 
 }
 
@@ -149,17 +149,7 @@ void Basic_eqAudioProcessor::updateFilterQ(int band, float q) {
 }
 
 void Basic_eqAudioProcessor::setFilterState(int band, bool b) {
-    unsigned count = 0;
     parametricFilter[band].setState(b);
-//    for (int i = 0; i < NUMBER_OF_BANDS; i++) {
-//        if (parametricFilter[i].getState()) {
-//            count++;
-//        }
-//    }
-//    for (int i = 0; i < NUMBER_OF_BANDS; i++) {
-//        parametricFilter[i].setCount(count);
-//    }
-
 }
 
 void Basic_eqAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
