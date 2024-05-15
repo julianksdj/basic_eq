@@ -30,29 +30,6 @@ Filter::Filter(float fs, float f) {
     computeBiquadCoeffs();
 }
 
-void Filter::setGain(float g) {
-    biquadFilterParams.g = g;
-    computeBiquadCoeffs();
-}
-
-void Filter::setCutoff(float f) {
-    biquadFilterParams.f = f;
-    computeBiquadCoeffs();
-}
-
-void Filter::setQ(float q) {
-    biquadFilterParams.q = q;
-    computeBiquadCoeffs();
-}
-
-void Filter::setState(bool on) {
-    biquadFilterParams.state = on;
-}
-
-bool Filter::getState() {
-    return biquadFilterParams.state;
-}
-
 void Filter::computeBiquadCoeffs() {
     float w0 = 2 * juce::MathConstants<float>::pi * (biquadFilterParams.f / biquadFilterParams.fs);
     float sinw = sinf(w0);

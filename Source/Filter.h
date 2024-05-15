@@ -44,14 +44,8 @@ class Filter {
 public:
     Filter();
     Filter(float fs, float f);
-    void setGain(float g);
-    void setCutoff(float f);
-    void setQ(float q);
-    void setState(bool on);
-    bool getState();
     void computeBiquadCoeffs();
     void runBiquadFilter(juce::AudioBuffer<float>* buffer);
     
-private:
     filterParams_t biquadFilterParams;
 };

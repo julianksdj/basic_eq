@@ -137,19 +137,22 @@ bool Basic_eqAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
 #endif
 
 void Basic_eqAudioProcessor::updateFilterGain(int band, float g) {
-    parametricFilter[band].setGain(g);
+    parametricFilter[band].biquadFilterParams.g = g;
+    parametricFilter[band].computeBiquadCoeffs();
 }
 
 void Basic_eqAudioProcessor::updateFilterCutoff(int band, float f) {
-    parametricFilter[band].setCutoff(f);
+    parametricFilter[band].biquadFilterParams.f = f;
+    parametricFilter[band].computeBiquadCoeffs();
 }
 
 void Basic_eqAudioProcessor::updateFilterQ(int band, float q) {
-    parametricFilter[band].setQ(q);
+    parametricFilter[band].biquadFilterParams.q = q;
+    parametricFilter[band].computeBiquadCoeffs();
 }
 
 void Basic_eqAudioProcessor::setFilterState(int band, bool b) {
-    parametricFilter[band].setState(b);
+    parametricFilter[band].biquadFilterParams.state = b;
 }
 
 void Basic_eqAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
