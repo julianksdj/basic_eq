@@ -54,7 +54,7 @@ bool Filter::getState() {
 }
 
 void Filter::computeBiquadCoeffs() {
-    float w0 = 2 * M_PI * (biquadFilterParams.f / biquadFilterParams.fs);
+    float w0 = 2 * juce::MathConstants<float>::pi * (biquadFilterParams.f / biquadFilterParams.fs);
     float sinw = sinf(w0);
     float cosw = cosf(w0);
     float a = powf(10, biquadFilterParams.g / 40);
