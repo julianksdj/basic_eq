@@ -37,10 +37,18 @@ private:
     // Controls
     juce::Slider band_sld[NUMBER_OF_BANDS];
     juce::Slider band_knb[NUMBER_OF_BANDS];
+    juce::Slider lpf_freq_knb;
+    juce::Slider lpf_q_knb;
+    juce::Slider hpf_freq_knb;
+    juce::Slider hpf_q_knb;
+    juce::ToggleButton band_tgl[NUMBER_OF_BANDS];
+    juce::ToggleButton lpf_tgl;
+    juce::ToggleButton hpf_tgl;
     
     // Labels
     juce::Label band_lbl[NUMBER_OF_BANDS];
-    juce::ToggleButton band_tgl[NUMBER_OF_BANDS];
+    juce::Label lpf_lbl;
+    juce::Label hpf_lbl;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Basic_eqAudioProcessorEditor)
 };
