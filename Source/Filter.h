@@ -14,13 +14,18 @@
 
 class Filter {
     
+    struct stereoCoef_t {
+        float coefL;
+        float coefR;
+    };
+    
     struct biquadCoeffs_t {
-        float a0;
-        float a1;
-        float a2;
-        float b0;
-        float b1;
-        float b2;
+        stereoCoef_t a0;
+        stereoCoef_t a1;
+        stereoCoef_t a2;
+        stereoCoef_t b0;
+        stereoCoef_t b1;
+        stereoCoef_t b2;
     };
     
     struct filterParams_t {
@@ -30,10 +35,10 @@ class Filter {
         float q;
         float fs; //sampling rate
         biquadCoeffs_t biquadCoeffs;
-        float z1_i; // x(n-1)
-        float z2_i; // x(n-2)
-        float z1_o; // y(n-1)
-        float z2_o; // y(n-2)
+        stereoCoef_t z1_i; // x(n-1)
+        stereoCoef_t z2_i; // x(n-2)
+        stereoCoef_t z1_o; // y(n-1)
+        stereoCoef_t z2_o; // y(n-2)
     };
     
 public:
@@ -45,7 +50,7 @@ public:
     void setState(bool on);
     bool getState();
     void computeBiquadCoeffs();
-    void runBiquadFilter(float* channelData, int size);
+    void runBiquadFilter(juce::AudioBuffer<float>* buffer);
     
 private:
     filterParams_t biquadFilterParams;

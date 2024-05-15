@@ -158,11 +158,12 @@ void Basic_eqAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear (i, 0, buffer.getNumSamples());
+    }
     
     for (int i = 0; i < NUMBER_OF_BANDS; i++) {
-        parametricFilter[i].runBiquadFilter(buffer.getWritePointer(0), buffer.getNumSamples());
+        parametricFilter[i].runBiquadFilter(&buffer);
     }
 
 }
