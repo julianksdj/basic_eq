@@ -37,7 +37,8 @@ Basic_eqAudioProcessorEditor::Basic_eqAudioProcessorEditor(Basic_eqAudioProcesso
     hpf_freq_knb.setTextBoxStyle(juce::Slider::TextBoxBelow, false, BAND_W, 30);
     hpf_freq_knb.addListener(this);
     hpf_freq_knb.setRange(20.0, 20000.0);
-    hpf_freq_knb.setValue(20.0);
+    hpf_freq_knb.setValue(100.0);
+    hpf_freq_knb.setSkewFactor(0.2, false);
     
     addAndMakeVisible(hpf_q_knb);
     hpf_q_knb.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
@@ -47,7 +48,7 @@ Basic_eqAudioProcessorEditor::Basic_eqAudioProcessorEditor(Basic_eqAudioProcesso
     hpf_q_knb.setValue(0.7);
     
     addAndMakeVisible(hpf_tgl);
-    hpf_tgl.setToggleState(true, juce::dontSendNotification);
+    hpf_tgl.setToggleState(false, juce::dontSendNotification);
     hpf_tgl.addListener(this);
     
     addAndMakeVisible(hpf_lbl);
@@ -60,7 +61,8 @@ Basic_eqAudioProcessorEditor::Basic_eqAudioProcessorEditor(Basic_eqAudioProcesso
     lpf_freq_knb.setTextBoxStyle(juce::Slider::TextBoxBelow, false, BAND_W, 30);
     lpf_freq_knb.addListener(this);
     lpf_freq_knb.setRange(20.0, 20000.0);
-    lpf_freq_knb.setValue(20000.0);
+    lpf_freq_knb.setValue(10000.0);
+    lpf_freq_knb.setSkewFactor(0.2, false);
     
     addAndMakeVisible(lpf_q_knb);
     lpf_q_knb.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
@@ -70,7 +72,7 @@ Basic_eqAudioProcessorEditor::Basic_eqAudioProcessorEditor(Basic_eqAudioProcesso
     lpf_q_knb.setValue(0.7);
     
     addAndMakeVisible(lpf_tgl);
-    lpf_tgl.setToggleState(true, juce::dontSendNotification);
+    lpf_tgl.setToggleState(false, juce::dontSendNotification);
     lpf_tgl.addListener(this);
     
     addAndMakeVisible(lpf_lbl);
@@ -152,22 +154,57 @@ void Basic_eqAudioProcessorEditor::sliderValueChanged(juce::Slider *slider)
         if (slider == &band_sld[i])
         {
             DBG("band_sld[" << i << "]="<< band_sld[i].getValue());
-            audioProcessor.updateFilterGain(i, band_sld[i].getValue());
+            audioProcessor.updatePeakingGain(i, band_sld[i].getValue());
         }
         if (slider == &band_knb[i])
         {
             DBG("band_knb[" << i << "]="<< band_knb[i].getValue());
-            audioProcessor.updateFilterQ(i, band_knb[i].getValue());
+            audioProcessor.updatePeakingQ(i, band_knb[i].getValue());
         }
+    }
+    if (slider == &lpf_freq_knb)
+    {
+        DBG("lpf_freq_knb" << lpf_freq_knb.getValue());
+        audioProcessor.updateLpfCutoff(lpf_freq_knb.getValue());
+    }
+    else if (slider == &hpf_freq_knb)
+    {
+        DBG("hpf_freq_knb" << hpf_freq_knb.getValue());
+        audioProcessor.updateHpfCutoff(hpf_freq_knb.getValue());
+    }
+    else if (slider == &lpf_q_knb)
+    {
+        DBG("lpf_q_knb" << lpf_q_knb.getValue());
+        audioProcessor.updateLpfQ(lpf_q_knb.getValue());
+    }
+    else if (slider == &hpf_q_knb)
+    {
+        DBG("hpf_q_knb" << hpf_q_knb.getValue());
+        audioProcessor.updateHpfQ(hpf_q_knb.getValue());
     }
 }
 
 void Basic_eqAudioProcessorEditor::buttonClicked(juce::Button *button) {
+    juce::String str;
+    
     for (int i = 0; i < NUMBER_OF_BANDS; i++) {
         if (button == &band_tgl[i]) {
-            audioProcessor.setFilterState(i, button->getToggleState());
-            juce::String str = (band_tgl[i].getToggleState() == true ? "band on" : "band off");
+            audioProcessor.setPeakingState(i, button->getToggleState());
+            str = (band_tgl[i].getToggleState() == true ? "band on" : "band off");
             DBG("band_tgl[" << i << "]="<< str);
         }
     }
+    
+    if (button == &hpf_tgl) {
+        audioProcessor.setHpfState(button->getToggleState());
+        str = (hpf_tgl.getToggleState() == true ? "hpf on" : "hpf off");
+        DBG("hpf_tgl" << str);
+    }
+    
+    if (button == &lpf_tgl) {
+        audioProcessor.setLpfState(button->getToggleState());
+        str = (lpf_tgl.getToggleState() == true ? "lpf on" : "lpf off");
+        DBG("lpf_tgl" << str);
+    }
+        
 }

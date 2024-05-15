@@ -66,14 +66,22 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    void updateFilterGain(int band, float g);
-    void updateFilterCutoff(int band, float f);
-    void updateFilterQ(int band, float q);
-    void setFilterState(int band, bool b);
+    void updatePeakingGain(int band, float g);
+    void updatePeakingCutoff(int band, float f);
+    void updatePeakingQ(int band, float q);
+    void updateHpfCutoff(float f);
+    void updateLpfCutoff(float f);
+    void updateHpfQ(float q);
+    void updateLpfQ(float q);
+    void setPeakingState(int band, bool b);
+    void setHpfState(bool b);
+    void setLpfState(bool b);
 
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Basic_eqAudioProcessor)
     
-    Filter parametricFilter[NUMBER_OF_BANDS];    
+    Filter parametricFilter[NUMBER_OF_BANDS];
+    Filter hpFilter;
+    Filter lpFilter;
 };

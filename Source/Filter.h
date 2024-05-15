@@ -20,7 +20,6 @@ class Filter {
     };
     
     struct biquadCoeffs_t {
-        stereoCoef_t a0;
         stereoCoef_t a1;
         stereoCoef_t a2;
         stereoCoef_t b0;
@@ -43,8 +42,10 @@ class Filter {
     
 public:
     Filter();
-    Filter(float fs, float f);
-    void computeBiquadCoeffs();
+    Filter(float fs, float f, int type, bool state);
+    void computePeakingCoeffs();
+    void computeLowPassCoeffs();
+    void computeHighPassCoeffs();
     void runBiquadFilter(juce::AudioBuffer<float>* buffer);
     
     filterParams_t biquadFilterParams;

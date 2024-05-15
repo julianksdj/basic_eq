@@ -93,15 +93,17 @@ void Basic_eqAudioProcessor::changeProgramName (int index, const juce::String& n
 //==============================================================================
 void Basic_eqAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    parametricFilter[0] = Filter(sampleRate, CUTOFF_1);
-    parametricFilter[1] = Filter(sampleRate, CUTOFF_2);
-    parametricFilter[2] = Filter(sampleRate, CUTOFF_3);
-    parametricFilter[3] = Filter(sampleRate, CUTOFF_4);
-    parametricFilter[4] = Filter(sampleRate, CUTOFF_5);
-    parametricFilter[5] = Filter(sampleRate, CUTOFF_6);
-    parametricFilter[6] = Filter(sampleRate, CUTOFF_7);
-    parametricFilter[7] = Filter(sampleRate, CUTOFF_8);
+    parametricFilter[0] = Filter(sampleRate, CUTOFF_1, 0, true);
+    parametricFilter[1] = Filter(sampleRate, CUTOFF_2, 0, true);
+    parametricFilter[2] = Filter(sampleRate, CUTOFF_3, 0, true);
+    parametricFilter[3] = Filter(sampleRate, CUTOFF_4, 0, true);
+    parametricFilter[4] = Filter(sampleRate, CUTOFF_5, 0, true);
+    parametricFilter[5] = Filter(sampleRate, CUTOFF_6, 0, true);
+    parametricFilter[6] = Filter(sampleRate, CUTOFF_7, 0, true);
+    parametricFilter[7] = Filter(sampleRate, CUTOFF_8, 0, true);
 
+    hpFilter = Filter(sampleRate, 100.0, 1, false);
+    lpFilter = Filter(sampleRate, 10000.0, 2, false);
 }
 
 void Basic_eqAudioProcessor::releaseResources()
@@ -136,23 +138,51 @@ bool Basic_eqAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
 }
 #endif
 
-void Basic_eqAudioProcessor::updateFilterGain(int band, float g) {
+void Basic_eqAudioProcessor::updatePeakingGain(int band, float g) {
     parametricFilter[band].biquadFilterParams.g = g;
-    parametricFilter[band].computeBiquadCoeffs();
+    parametricFilter[band].computePeakingCoeffs();
 }
 
-void Basic_eqAudioProcessor::updateFilterCutoff(int band, float f) {
+void Basic_eqAudioProcessor::updatePeakingCutoff(int band, float f) {
     parametricFilter[band].biquadFilterParams.f = f;
-    parametricFilter[band].computeBiquadCoeffs();
+    parametricFilter[band].computePeakingCoeffs();
 }
 
-void Basic_eqAudioProcessor::updateFilterQ(int band, float q) {
+void Basic_eqAudioProcessor::updatePeakingQ(int band, float q) {
     parametricFilter[band].biquadFilterParams.q = q;
-    parametricFilter[band].computeBiquadCoeffs();
+    parametricFilter[band].computePeakingCoeffs();
 }
 
-void Basic_eqAudioProcessor::setFilterState(int band, bool b) {
+void Basic_eqAudioProcessor::setPeakingState(int band, bool b) {
     parametricFilter[band].biquadFilterParams.state = b;
+}
+
+void Basic_eqAudioProcessor::setHpfState(bool b) {
+    hpFilter.biquadFilterParams.state = b;
+}
+
+void Basic_eqAudioProcessor::setLpfState(bool b) {
+    lpFilter.biquadFilterParams.state = b;
+}
+
+void Basic_eqAudioProcessor::updateLpfCutoff(float f) {
+    lpFilter.biquadFilterParams.f = f;
+    lpFilter.computeLowPassCoeffs();
+}
+
+void Basic_eqAudioProcessor::updateHpfCutoff(float f) {
+    hpFilter.biquadFilterParams.f = f;
+    hpFilter.computeHighPassCoeffs();
+}
+
+void Basic_eqAudioProcessor::updateLpfQ(float q) {
+    lpFilter.biquadFilterParams.q = q;
+    lpFilter.computeLowPassCoeffs();
+}
+
+void Basic_eqAudioProcessor::updateHpfQ(float q) {
+    hpFilter.biquadFilterParams.q = q;
+    hpFilter.computeHighPassCoeffs();
 }
 
 void Basic_eqAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -168,6 +198,8 @@ void Basic_eqAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
     for (int i = 0; i < NUMBER_OF_BANDS; i++) {
         parametricFilter[i].runBiquadFilter(&buffer);
     }
+    lpFilter.runBiquadFilter(&buffer);
+    hpFilter.runBiquadFilter(&buffer);
 
 }
 
