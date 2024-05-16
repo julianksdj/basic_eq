@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(AudioPlugin VERSION 0.0.1)
+project(BasicEqPlugin VERSION 0.0.1)
 
 # juce_add_gui_app(${PROJECT_NAME}
 #     # VERSION ...                       # Set this if the app version is different to the project version
@@ -33,6 +33,10 @@ juce_add_plugin(${PROJECT_NAME}
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME ${PROJECT_NAME}
+    MICROPHONE_PERMISSION_ENABLED TRUE
+    MICROPHONE_PERMISSION_TEXT "Amazing Audio App needs access to your audio interface"
+    HARDENED_RUNTIME_ENABLED TRUE
+    HARDENED_RUNTIME_OPTIONS com.apple.security.device.audio-input
 )        
 
 # target_include_directories(${PROJECT_NAME}
