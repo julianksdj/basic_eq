@@ -22,6 +22,55 @@
             "logging": {
               "moduleLoad": false
             },
+        },
+        {
+            "name": "C++ Launch (Windows)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\build\\plugin\\BasicEqPlugin_artefacts\\Debug\\Standalone\\BasicEqPlugin.exe",
+            "symbolSearchPath": "C:\\Symbols;C:\\SymbolDir2",
+            "externalConsole": true,
+            "cwd": "${workspaceFolder}",
+            "logging": {
+              "moduleLoad": false,
+              "trace": true
+            },
+            "visualizerFile": "${workspaceFolder}/my.natvis",
+            
         }
+        {
+            "name": "Test FIR vs IIR (Windows)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\build\\test\\Debug\\test_fir_vs_iir.exe",
+            "symbolSearchPath": "C:\\Symbols;C:\\SymbolDir2",
+            "externalConsole": true,
+            "cwd": "${workspaceFolder}",
+            "logging": {
+              "moduleLoad": false,
+              "trace": true
+            },
+            "visualizerFile": "${workspaceFolder}/my.natvis",  
+        },
+        {
+            "name": "Test FIR vs IIR (Mac)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/test/test_fir_vs_iir",
+            "args": [], 
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "$PATH:${command:cmake.launchTargetDirectory}"
+                }
+            ],
+            "MIMode": "lldb",
+            "logging": {
+              "moduleLoad": false
+            },
+        },
     ]
 }
+

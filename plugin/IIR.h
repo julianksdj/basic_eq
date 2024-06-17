@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    Filter.h
+    IIR.h
     Created: 29 Jan 2024 10:42:00pm
     Author:  Keepin' Soul
 
@@ -12,7 +12,7 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 
-class Filter {
+class IIR {
     
     struct stereoCoef_t {
         float coefL;
@@ -33,7 +33,7 @@ class Filter {
         float f;
         float q;
         float fs; //sampling rate
-        biquadCoeffs_t biquadCoeffs;
+        biquadCoeffs_t iirCoeffs;
         stereoCoef_t z1_i; // x(n-1)
         stereoCoef_t z2_i; // x(n-2)
         stereoCoef_t z1_o; // y(n-1)
@@ -41,12 +41,12 @@ class Filter {
     };
     
 public:
-    Filter();
-    Filter(float fs, float f, int type, bool state);
+    IIR();
+    IIR(float fs, float f, int type, bool state);
     void computePeakingCoeffs();
     void computeLowPassCoeffs();
     void computeHighPassCoeffs();
-    void runBiquadFilter(juce::AudioBuffer<float>* buffer);
+    void runFilter(juce::AudioBuffer<float>* buffer);
     
-    filterParams_t biquadFilterParams;
+    filterParams_t iirParams;
 };

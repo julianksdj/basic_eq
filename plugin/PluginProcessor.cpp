@@ -96,17 +96,17 @@ void BasicEqAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     juce::ignoreUnused (samplesPerBlock);
 
-    parametricFilter[0] = Filter((float) sampleRate, CUTOFF_1, 0, true);
-    parametricFilter[1] = Filter((float) sampleRate, CUTOFF_2, 0, true);
-    parametricFilter[2] = Filter((float) sampleRate, CUTOFF_3, 0, true);
-    parametricFilter[3] = Filter((float) sampleRate, CUTOFF_4, 0, true);
-    parametricFilter[4] = Filter((float) sampleRate, CUTOFF_5, 0, true);
-    parametricFilter[5] = Filter((float) sampleRate, CUTOFF_6, 0, true);
-    parametricFilter[6] = Filter((float) sampleRate, CUTOFF_7, 0, true);
-    parametricFilter[7] = Filter((float) sampleRate, CUTOFF_8, 0, true);
+    iirPeakFilter[0] = IIR((float) sampleRate, CUTOFF_1, 0, true);
+    iirPeakFilter[1] = IIR((float) sampleRate, CUTOFF_2, 0, true);
+    iirPeakFilter[2] = IIR((float) sampleRate, CUTOFF_3, 0, true);
+    iirPeakFilter[3] = IIR((float) sampleRate, CUTOFF_4, 0, true);
+    iirPeakFilter[4] = IIR((float) sampleRate, CUTOFF_5, 0, true);
+    iirPeakFilter[5] = IIR((float) sampleRate, CUTOFF_6, 0, true);
+    iirPeakFilter[6] = IIR((float) sampleRate, CUTOFF_7, 0, true);
+    iirPeakFilter[7] = IIR((float) sampleRate, CUTOFF_8, 0, true);
 
-    hpFilter = Filter((float) sampleRate, 100.0, 1, false);
-    lpFilter = Filter((float) sampleRate, 10000.0, 2, false);
+    hpFilter = IIR((float) sampleRate, 100.0, 1, false);
+    lpFilter = IIR((float) sampleRate, 10000.0, 2, false);
 }
 
 void BasicEqAudioProcessor::releaseResources()
@@ -140,50 +140,72 @@ bool BasicEqAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 }
 
 void BasicEqAudioProcessor::updatePeakingGain(int band, float g) {
-    parametricFilter[band].biquadFilterParams.g = g;
-    parametricFilter[band].computePeakingCoeffs();
+    iirPeakFilter[band].iirParams.g = g;
+    iirPeakFilter[band].computePeakingCoeffs();
 }
 
 void BasicEqAudioProcessor::updatePeakingCutoff(int band, float f) {
-    parametricFilter[band].biquadFilterParams.f = f;
-    parametricFilter[band].computePeakingCoeffs();
+    iirPeakFilter[band].iirParams.f = f;
+    iirPeakFilter[band].computePeakingCoeffs();
 }
 
 void BasicEqAudioProcessor::updatePeakingQ(int band, float q) {
-    parametricFilter[band].biquadFilterParams.q = q;
-    parametricFilter[band].computePeakingCoeffs();
+    iirPeakFilter[band].iirParams.q = q;
+    iirPeakFilter[band].computePeakingCoeffs();
 }
 
 void BasicEqAudioProcessor::setPeakingState(int band, bool b) {
-    parametricFilter[band].biquadFilterParams.state = b;
+    iirPeakFilter[band].iirParams.state = b;
 }
 
 void BasicEqAudioProcessor::setHpfState(bool b) {
-    hpFilter.biquadFilterParams.state = b;
+    hpFilter.iirParams.state = b;
 }
 
 void BasicEqAudioProcessor::setLpfState(bool b) {
-    lpFilter.biquadFilterParams.state = b;
+    lpFilter.iirParams.state = b;
 }
 
 void BasicEqAudioProcessor::updateLpfCutoff(float f) {
-    lpFilter.biquadFilterParams.f = f;
+    lpFilter.iirParams.f = f;
     lpFilter.computeLowPassCoeffs();
 }
 
 void BasicEqAudioProcessor::updateHpfCutoff(float f) {
-    hpFilter.biquadFilterParams.f = f;
+    hpFilter.iirParams.f = f;
     hpFilter.computeHighPassCoeffs();
 }
 
 void BasicEqAudioProcessor::updateLpfQ(float q) {
-    lpFilter.biquadFilterParams.q = q;
+    lpFilter.iirParams.q = q;
     lpFilter.computeLowPassCoeffs();
 }
 
 void BasicEqAudioProcessor::updateHpfQ(float q) {
-    hpFilter.biquadFilterParams.q = q;
+    hpFilter.iirParams.q = q;
     hpFilter.computeHighPassCoeffs();
+}
+
+void BasicEqAudioProcessor::updateAlgorithm(int algo) {
+
+    float sampleRateAux = (float) this->getSampleRate();
+    switch (algo) {
+        case 0: // IIR
+            iirPeakFilter[0] = IIR((float) sampleRateAux, CUTOFF_1, 0, true);
+            iirPeakFilter[1] = IIR((float) sampleRateAux, CUTOFF_2, 0, true);
+            iirPeakFilter[2] = IIR((float) sampleRateAux, CUTOFF_3, 0, true);
+            iirPeakFilter[3] = IIR((float) sampleRateAux, CUTOFF_4, 0, true);
+            iirPeakFilter[4] = IIR((float) sampleRateAux, CUTOFF_5, 0, true);
+            iirPeakFilter[5] = IIR((float) sampleRateAux, CUTOFF_6, 0, true);
+            iirPeakFilter[6] = IIR((float) sampleRateAux, CUTOFF_7, 0, true);
+            iirPeakFilter[7] = IIR((float) sampleRateAux, CUTOFF_8, 0, true);
+            hpFilter = IIR((float) sampleRateAux, 100.0, 1, false);
+            lpFilter = IIR((float) sampleRateAux, 10000.0, 2, false);
+        break;
+        default:
+        break;
+    
+    }
 }
 
 void BasicEqAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -198,10 +220,11 @@ void BasicEqAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     }
     
     for (int i = 0; i < NUMBER_OF_BANDS; i++) {
-        parametricFilter[i].runBiquadFilter(&buffer);
+        iirPeakFilter[i].runFilter(&buffer);
     }
-    lpFilter.runBiquadFilter(&buffer);
-    hpFilter.runBiquadFilter(&buffer);
+
+    lpFilter.runFilter(&buffer);
+    hpFilter.runFilter(&buffer);
 
 }
 

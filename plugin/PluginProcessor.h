@@ -10,7 +10,7 @@
 
 //#include <JuceHeader.h>
 #include <juce_audio_processors/juce_audio_processors.h>
-#include "Filter.h"
+#include "IIR.h"
 
 #define NUMBER_OF_BANDS 8
 #define CUTOFF_1 20.0
@@ -73,6 +73,7 @@ public:
     void updateLpfCutoff(float f);
     void updateHpfQ(float q);
     void updateLpfQ(float q);
+    void updateAlgorithm(int algo);
     void setPeakingState(int band, bool b);
     void setHpfState(bool b);
     void setLpfState(bool b);
@@ -81,7 +82,7 @@ private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicEqAudioProcessor)
     
-    Filter parametricFilter[NUMBER_OF_BANDS];
-    Filter hpFilter;
-    Filter lpFilter;
+    IIR iirPeakFilter[NUMBER_OF_BANDS];
+    IIR hpFilter;
+    IIR lpFilter;
 };

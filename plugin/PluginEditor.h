@@ -15,7 +15,8 @@
 */
 class BasicEqAudioProcessorEditor final : public juce::AudioProcessorEditor,
                                       public juce::Slider::Listener,
-                                      public juce::Button::Listener
+                                      public juce::Button::Listener,
+                                      public juce::ComboBox::Listener
 {
 public:
     explicit BasicEqAudioProcessorEditor (BasicEqAudioProcessor&);
@@ -28,6 +29,7 @@ public:
     // Controls
     void sliderValueChanged(juce::Slider *slider) override;
     void buttonClicked(juce::Button*) override;
+    void comboBoxChanged(juce::ComboBox *comboBox) override; 	
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
@@ -43,6 +45,7 @@ private:
     juce::ToggleButton band_tgl[NUMBER_OF_BANDS];
     juce::ToggleButton lpf_tgl;
     juce::ToggleButton hpf_tgl;
+    juce::ComboBox arch_box;
     
     // Labels
     juce::Label band_lbl[NUMBER_OF_BANDS];

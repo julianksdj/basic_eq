@@ -17,12 +17,24 @@
 #define LABEL_W BAND_W
 #define LABEL_H 40
 #define QKNOB_H 80
+#define ARCH_BOX_H 60
+#define ARCH_BOX_W 100
 #define BAND_SEPARATION (BAND_W + MARGIN)
 #define QKNOB_POS_H ((2 * MARGIN) + SLIDER_H)
 #define TOGGLE_POS_H (QKNOB_POS_H + QKNOB_H + MARGIN)
 #define LABEL_POS_H (TOGGLE_POS_H + TOGGLE_H + MARGIN)
+#define ARCH_BOX_POS_H (LABEL_POS_H + LABEL_H + MARGIN)
 #define WINDOW_W ((NUMBER_OF_BANDS * (BAND_W + MARGIN)) + MARGIN + 2 * (BAND_W + MARGIN))
-#define WINDOW_H (SLIDER_H + QKNOB_H + TOGGLE_H + LABEL_H + (4 * MARGIN))
+#define WINDOW_H (SLIDER_H + QKNOB_H + TOGGLE_H + LABEL_H + ARCH_BOX_H + (5 * MARGIN))
+
+
+#define IIR_ID 1
+#define FIR_ID 2
+
+#define LPF_TEXT ("LPF")
+#define HPF_TEXT ("HPF")
+#define IIR_TEXT ("IIR")
+#define FIR_TEXT ("FIR")
 
 //==============================================================================
 BasicEqAudioProcessorEditor::BasicEqAudioProcessorEditor(BasicEqAudioProcessor& p)
@@ -53,7 +65,7 @@ BasicEqAudioProcessorEditor::BasicEqAudioProcessorEditor(BasicEqAudioProcessor& 
     hpf_tgl.addListener(this);
     
     addAndMakeVisible(hpf_lbl);
-    juce::String lbl_str = "HPF";
+    juce::String lbl_str = HPF_TEXT;
     hpf_lbl.setJustificationType(juce::Justification::centred);
     hpf_lbl.setText(lbl_str, juce::dontSendNotification);
 
@@ -77,7 +89,7 @@ BasicEqAudioProcessorEditor::BasicEqAudioProcessorEditor(BasicEqAudioProcessor& 
     lpf_tgl.addListener(this);
     
     addAndMakeVisible(lpf_lbl);
-    lbl_str = "LPF";
+    lbl_str = LPF_TEXT;
     lpf_lbl.setJustificationType(juce::Justification::centred);
     lpf_lbl.setText(lbl_str, juce::dontSendNotification);
     
@@ -106,6 +118,13 @@ BasicEqAudioProcessorEditor::BasicEqAudioProcessorEditor(BasicEqAudioProcessor& 
         band_lbl[i].setJustificationType(juce::Justification::centred);
         band_lbl[i].setText(lbl_str, juce::dontSendNotification);
     }
+
+    // addAndMakeVisible(arch_box);
+    // arch_box.addItem(IIR_TEXT, IIR_ID);
+    // arch_box.addItem(FIR_TEXT, FIR_ID);
+    // arch_box.setSelectedId(0);
+    // arch_box.setJustificationType(juce::Justification::centred);
+    // arch_box.addListener(this);
     
     
 }
@@ -147,6 +166,8 @@ void BasicEqAudioProcessorEditor::resized()
     lpf_tgl.setBounds(x, 2 * (QKNOB_H + MARGIN), TOGGLE_W, TOGGLE_H);
     lpf_lbl.setBounds(x, 2 * (QKNOB_H + MARGIN) + TOGGLE_H, LABEL_W, LABEL_H);
     x += BAND_SEPARATION;
+
+    arch_box.setBounds(0, ARCH_BOX_POS_H, ARCH_BOX_W, ARCH_BOX_H);
 }
 
 void BasicEqAudioProcessorEditor::sliderValueChanged(juce::Slider *slider)
@@ -208,4 +229,14 @@ void BasicEqAudioProcessorEditor::buttonClicked(juce::Button *button) {
         DBG("lpf_tgl" << str);
     }
         
+}
+
+void BasicEqAudioProcessorEditor::comboBoxChanged(juce::ComboBox *comboBox) {
+    if (comboBox->getSelectedId() == 1) {
+        audioProcessor.updateAlgorithm(0);
+        DBG("IIR");
+    } else if (comboBox->getSelectedId() == 2) {
+        audioProcessor.updateAlgorithm(1);
+        DBG("FIR");
+    }
 }

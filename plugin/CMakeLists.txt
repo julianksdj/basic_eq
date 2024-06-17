@@ -48,10 +48,12 @@ target_sources(${PROJECT_NAME}
     PRIVATE
         PluginEditor.cpp
         PluginProcessor.cpp
-        Filter.cpp
+        IIR.cpp
+        FIR.cpp
         PluginEditor.h
         PluginProcessor.h
-        Filter.h     
+        IIR.h
+        FIR.h  
 )
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
