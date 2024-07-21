@@ -8,4 +8,7 @@ Equations for the coefficients were extracted from [miniDSP biquad filters sprea
 - low pass filter
 - high pass filter
 
+<img width="658" alt="screenshot" src="https://github.com/user-attachments/assets/73dab7b3-60e2-4ea5-bbe2-02aadc321250">
+
+
 
